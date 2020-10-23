@@ -7,14 +7,16 @@ export default class clientController {
         id, name , email, role
     }
     var finalClients = Filter(Client, filterClients);
-    return res.status(201).json({
+    return res.status(200).json({
         count: finalClients.length,
         message: "List of Clients ",
         Client: finalClients
     });
     }
    static getRoleFromClients(clientId){
-       return Client.filter(x => x.id === clientId).role;
+       var filterClient = (Client.filter(x => x.id === clientId));
+       if (clientId === undefined || clientId == null) return null;
+       return Client.filter(x => x.id === clientId && x.role ==='admin');
    }
 }
     

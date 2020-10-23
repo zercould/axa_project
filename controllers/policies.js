@@ -7,15 +7,17 @@ export default class clientController {
     const filterPolicies = {
         id, amountInsured , email, inceptionDate, installmentPayment, clientId
     }
-    if (Clients.getRoleFromClients(userId) !== "admin"){
+    var userData =Clients.getRoleFromClients(userId);
+    if (typeof userData !== 'undefined' && userData.length > 0) {
+        console.log(Clients.getRoleFromClients(userId));
         var finalPolicies = Filter(Policies, filterPolicies);
-        return res.status(201).json({
+        return res.status(200).json({
             count: finalPolicies.length,
             message: "List of Policies ",
             Policies: finalPolicies
         });
     }else{
-        return res.status(404).json({
+        return res.status(500).json({
             error: true,
             message: "Permission Denied",
         });
