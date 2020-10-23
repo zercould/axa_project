@@ -25,8 +25,11 @@ npm install
 npm start
 ```
 
+**testing**
 
-
+```
+npm test
+```
 
 
 *To test import the file 'axa.postman_collection.json' into postman*
