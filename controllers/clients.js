@@ -13,6 +13,8 @@ export default class clientController {
         Client: finalClients
     });
     }
-   
+   static getRoleFromClients(clientId){
+       return Client.filter(x => x.id === clientId).role;
+   }
 }
     
