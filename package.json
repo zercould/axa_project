@@ -1,0 +1,30 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "api for axa",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node init.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zercould/axa_project.git"
+  },
+  "author": "Raúl Domingo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zercould/axa_project/issues"
+  },
+  "homepage": "https://github.com/zercould/axa_project#readme",
+  "keywords": [],
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "nodemon": "^2.0.6"
+  }
+}
