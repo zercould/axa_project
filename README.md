@@ -9,7 +9,11 @@
 ```
 git clone https://github.com/zercould/axa_project
 ```
+**go to project folder**
 
+```
+cd axa_project
+```
 **install npm**
 
 ```
