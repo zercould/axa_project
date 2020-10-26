@@ -7,28 +7,92 @@ const expect = require('chai').expect;
 chai.use(chaiHttp);
 const url= 'http://localhost:3000/api/v1';
 
+const admintToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnQiOlt7ImlkIjoiZThmZDE1OWItNTdjNC00ZDM2LTliZDctYTU5Y2ExMzA1N2JiIiwibmFtZSI6Ik1hbm5pbmciLCJlbWFpbCI6Im1hbm5pbmdibGFua2Vuc2hpcEBxdW90ZXphcnQuY29tIiwicm9sZSI6ImFkbWluIn1dLCJpYXQiOjE2MDM3MTI0NDR9.awtXuDkYz-mu1WuEfi_5RJBIR3qNee16Q-JE_RV7x3U";
+const userToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnQiOlt7ImlkIjoiYTNiOGQ0MjUtMmI2MC00YWQ3LWJlY2MtYmVkZjJlZjg2MGJkIiwibmFtZSI6IkJhcm5ldHQiLCJlbWFpbCI6ImJhcm5ldHRibGFua2Vuc2hpcEBxdW90ZXphcnQuY29tIiwicm9sZSI6InVzZXIifV0sImlhdCI6MTYwMzcxMzE4NH0.4w5pWahMzr45C7F1a6XxeMa1VbAW5-0UB_JfbUatR2M";
 
-
-describe('Error bad url: ',()=>{
-
+describe('Error on GetToken: ',()=>{
 	it('should receive an error', (done) => {
 		chai.request(url)
-			.post('/clients')
-			.send({names: "Britney"})
+			.post('/getToken')
+			.send({email: "Britney"})
 			.end( function(err,res){
-				console.log(res.body)
-				expect(res).to.have.status(404);
+				console.log(res.body);
+				expect(res).to.have.status(500);
 				done();
 			});
 	});
 
 });
 
-describe('get all client: ',()=>{
-
-	it('should get all client', (done) => {
+describe('get token: ',()=>{
+	it('should get error on get token', (done) => {
 		chai.request(url)
-			.post('/client')
+			.post('/getToken')
+			.send({email: "manningblankenship@quotezart.com"})
+			.end( function(err,res){
+				console.log(res.body);
+				tokenAdmin = res.body.accessToken;
+				expect(res).to.have.status(200);
+				done();
+			});
+	});
+
+});
+
+//Get user data filtered by user id -> Can be accessed by users with role "users" and "admin"
+
+describe('1 Get user data filtered by user id: ',()=>{
+	it('Get user data admin role', (done) => {
+		chai.request(url)
+		.post('/objective1')
+		.set({ Authorization:  admintToken})
+		.send({id: "e8fd159b-57c4-4d36-9bd7-a59ca13057bb"})
+		.end( function(err,res){
+				console.log(res.body);
+				expect(res).to.have.status(200);
+				done();
+			});
+	});
+
+});
+
+describe('1 Get user data filtered by user id: ',()=>{
+	it('Get user data user role', (done) => {
+		chai.request(url)
+		.post('/objective1')
+		.set({ Authorization: userToken})
+		.send({id: "e8fd159b-57c4-4d36-9bd7-a59ca13057bb"})
+		.end( function(err,res){
+				console.log(res.body);
+				expect(res).to.have.status(200);
+				done();
+			});
+	});
+
+});
+
+describe('1 Get user data filtered by user id: ',()=>{
+	it('get error bad param', (done) => {
+		chai.request(url)
+		.post('/objective1')
+		.set({ Authorization: userToken})
+		.send({ids: "e8fd159b-57c4-4d36-9bd7-a59ca13057bb"})
+		.end( function(err,res){
+				console.log(res.body);
+				expect(res).to.have.status(500);
+				done();
+			});
+	});
+});
+
+//Get user data filtered by user name -> Can be accessed by users with role "users" and "admin"
+
+describe('2 Get user data filtered by user name: ',()=>{
+	it('Get user data filtered by user name admin role', (done) => {
+		chai.request(url)
+            .post('/objective2')
+			.send({name: "Manning"})
+			.set({ Authorization: admintToken })
 			.end( function(err,res){
 				console.log(res.body)
 				expect(res).to.have.status(200);
@@ -38,72 +102,26 @@ describe('get all client: ',()=>{
 
 });
 
-describe('get all client by name: ',()=>{
-
-	it('should get all client', (done) => {
+describe('2 Get user data filtered by user name: ',()=>{
+	it('Get user data filtered by user name user role', (done) => {
 		chai.request(url)
-            .post('/client')
-            .send({names: "Britney"})
+            .post('/objective2')
+			.send({name: "Manning"})
+			.set({ Authorization: userToken })
 			.end( function(err,res){
 				console.log(res.body)
 				expect(res).to.have.status(200);
 				done();
 			});
 	});
-
-});
-describe('get all client by id: ',()=>{
-
-	it('should get all client by id', (done) => {
-		chai.request(url)
-            .post('/client')
-            .send({id: "a0ece5db-cd14-4f21-812f-966633e7be86"})
-			.end( function(err,res){
-				console.log(res.body)
-				expect(res).to.have.status(200);
-				done();
-			});
-	});
-
 });
 
-describe('get all client by email: ',()=>{
-
-	it('should get all client by email', (done) => {
+describe('2 Get user data filtered by user name: ',()=>{
+	it('Error bad param', (done) => {
 		chai.request(url)
-            .post('/client')
-            .send({email: "inesblankenship@quotezart.com"})
-			.end( function(err,res){
-				console.log(res.body)
-				expect(res).to.have.status(200);
-				done();
-			});
-	});
-
-});
-
-describe('get all client by role: ',()=>{
-
-	it('should get all client by role', (done) => {
-		chai.request(url)
-            .post('/client')
-            .send({role: "admin"})
-			.end( function(err,res){
-				console.log(res.body)
-				expect(res).to.have.status(200);
-				done();
-			});
-	});
-
-});
-
-    
-describe('Error bad role: ',()=>{
-
-	it('should receive an error', (done) => {
-		chai.request(url)
-            .post('/policies')
-            .send({userId: "82a2cc23-243a-409c-89b1-a4956e4ab201",clientId: "e8fd159b-57c4-4d36-9bd7-a59ca13057bb"})
+            .post('/objective2')
+			.send({names: "Manning"})
+			.set({ Authorization: userToken })
 			.end( function(err,res){
 				console.log(res.body)
 				expect(res).to.have.status(500);
@@ -113,26 +131,15 @@ describe('Error bad role: ',()=>{
 
 });
 
-describe('get all policies by user: ',()=>{
 
-	it('should get all policies by user', (done) => {
+//Get the list of policies linked to a user name -> Can be accessed by users with role "admin"
+
+describe('3 Get the list of policies linked to a user name: ',()=>{
+	it('Get the list of policies linked to a user name admin role', (done) => {
 		chai.request(url)
-            .post('/policies')
-            .send({userId: "a0ece5db-cd14-4f21-812f-966633e7be86",clientId: "e8fd159b-57c4-4d36-9bd7-a59ca13057bb"})
-			.end( function(err,res){
-				console.log(res.body)
-				expect(res).to.have.status(200);
-				done();
-			});
-	});
-
-});
-describe('get all policies by policity number: ',()=>{
-
-	it('should get all policies by policity number', (done) => {
-		chai.request(url)
-            .post('/policies')
-            .send({userId: "a0ece5db-cd14-4f21-812f-966633e7be86",id: "0df3bcef-7a14-4dd7-a42d-fa209d0d5804"})
+            .post('/objective3')
+			.send({name: "Manning"})
+			.set({ Authorization: admintToken })
 			.end( function(err,res){
 				console.log(res.body)
 				expect(res).to.have.status(200);
@@ -142,12 +149,77 @@ describe('get all policies by policity number: ',()=>{
 
 });
 
-describe('Error bad role: ',()=>{
-
-	it('should receive an error', (done) => {
+describe('3 Get the list of policies linked to a user name: ',()=>{
+	it('Error user role', (done) => {
 		chai.request(url)
-            .post('/policies')
-            .send({userId: "82a2cc23-243a-409c-89b1-a4956e4ab201",id: "0df3bcef-7a14-4dd7-a42d-fa209d0d5804"})
+            .post('/objective3')
+			.send({name: "Manning"})
+			.set({ Authorization: userToken })
+			.end( function(err,res){
+				console.log(res.body)
+				expect(res).to.have.status(500);
+				done();
+			});
+	});
+
+});
+describe('3 Get the list of policies linked to a user name: ',()=>{
+	it('Error Bad Param', (done) => {
+		chai.request(url)
+            .post('/objective3')
+			.send({names: "Manning"})
+			.set({ Authorization: userToken })
+			.end( function(err,res){
+				console.log(res.body)
+				expect(res).to.have.status(500);
+				done();
+			});
+	});
+
+});
+
+
+//Get the user linked to a policy number -> Can be accessed by users with role "admin"
+
+describe('4 Get the user linked to a policy number ',()=>{
+
+	it('Get the user linked to a policy number admin role', (done) => {
+		chai.request(url)
+			.post('/objective4')
+			.set({ Authorization: admintToken })
+            .send({police_number: "64cceef9-3a01-49ae-a23b-3761b604800b"})
+			.end( function(err,res){
+				console.log(res.body)
+				expect(res).to.have.status(200);
+				done();
+			});
+	});
+
+});
+
+describe('4 Get the user linked to a policy number ',()=>{
+
+	it('Get the user linked to a policy number user role', (done) => {
+		chai.request(url)
+			.post('/objective4')
+			.set({ Authorization: userToken })
+			.send({police_number: "64cceef9-3a01-49ae-a23b-3761b604800b"})
+			.end( function(err,res){
+				console.log(res.body)
+				expect(res).to.have.status(500);
+				done();
+			});
+	});
+
+});
+
+describe('4 Get the user linked to a policy number ',()=>{
+
+	it('Error Bad Params', (done) => {
+		chai.request(url)
+			.post('/objective4')
+			.set({ Authorization: userToken })
+			.send({police_numbers: "64cceef9-3a01-49ae-a23b-3761b604800b"})
 			.end( function(err,res){
 				console.log(res.body)
 				expect(res).to.have.status(500);

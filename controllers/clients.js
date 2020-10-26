@@ -1,22 +1,47 @@
-import Client from "../data/clients";
-import Filter from  "../utils/utils"
-export default class clientController {
-    static getClients(req, res) {
-    const { id, name, email, role } = req.body;
-    const filterClients = {
-        id, name , email, role
+import Model from "../models/clients";
+import Response from "../utils/response";
+
+export default class ClientController {
+    static getClientById(req, res) {
+        const { id } = req.body;
+        if( id !== undefined && id !== null){
+          
+            return Response.ReS(res,{
+                message: "List of Clients ",
+                Client: Model.findClientById(id)
+            });
+        }else{
+            return Response.ReE(res,{"message":"Please send param 'id'"})
+        }  
+    }  
+    static getClientByUserName(req, res) {
+        const { name } = req.body;
+        if( name !== undefined && name !== null){
+            return Response.ReS(res,{
+                message: "List of Clients ",
+                Client: Model.findClientByName(name)
+            });
+        }else{
+            return Response.ReE(res,{"message":"Please send param 'name'"})
+        }  
     }
-    var finalClients = Filter(Client, filterClients);
-    return res.status(200).json({
-        count: finalClients.length,
-        message: "List of Clients ",
-        Client: finalClients
-    });
+    static getClientByPoliceNumber(req, res) {
+        const { police_number } = req.body;
+        const {client} = req.client;
+
+        if(client[0].role === 'admin'){
+            if( police_number !== undefined && police_number !== null){
+                return Response.ReS(res,{
+                    message: "List of Clients ",
+                    Client: Model.getClientByPoliceNumber(police_number)
+                });
+            }else{
+                return Response.ReE(res,{"message":"Please send param 'police_number'"})
+            }  
+        }else{
+            return Response.ReE(res,{"message":"Only for admin roles'"});
+        }
+        
     }
-   static getRoleFromClients(clientId){
-       var filterClient = (Client.filter(x => x.id === clientId));
-       if (clientId === undefined || clientId == null) return null;
-       return Client.filter(x => x.id === clientId && x.role ==='admin');
-   }
 }
     

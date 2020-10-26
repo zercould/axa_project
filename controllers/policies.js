@@ -1,27 +1,24 @@
-import Policies from "../data/policies";
-import Filter from  "../utils/utils"
-import Clients from  "../controllers/clients"
-export default class clientController {
-    static getPolicies(req, res) {
-    const { id, amountInsured, email, inceptionDate, installmentPayment, clientId, userId } = req.body;
-    const filterPolicies = {
-        id, amountInsured , email, inceptionDate, installmentPayment, clientId
+import Policies from "../models/policies";
+import Response from "../utils/response";
+
+export default class policiesController {
+    static getPolicesByUserName(req, res) {
+        const { name } = req.body;
+        const {client} = req.client;
+
+        if(client[0].role === 'admin'){
+            if (name !== 'undefined' && name !== null) {
+                var finalPolices = Policies.findPoliciesByUserName(name);
+                return Response.ReS(res,{
+                    message: "List of Policies ",
+                    Policies: finalPolices
+                });
+            }else{
+                return Response.ReE(res,{"message":"Please send param 'name'"});
+            }
+        }else{
+            return Response.ReE(res,{"message":"Only for admin roles'"});
+        }
     }
-    var userData =Clients.getRoleFromClients(userId);
-    if (typeof userData !== 'undefined' && userData.length > 0) {
-        console.log(Clients.getRoleFromClients(userId));
-        var finalPolicies = Filter(Policies, filterPolicies);
-        return res.status(200).json({
-            count: finalPolicies.length,
-            message: "List of Policies ",
-            Policies: finalPolicies
-        });
-    }else{
-        return res.status(500).json({
-            error: true,
-            message: "Permission Denied",
-        });
-    }
-}
 }
     

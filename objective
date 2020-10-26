@@ -1,0 +1,6 @@
+
+1 Get user data filtered by user id -> Can be accessed by users with role "users" and "admin"
+2 Get user data filtered by user name -> Can be accessed by users with role "users" and "admin"
+3 Get the list of policies linked to a user name -> Can be accessed by users with role "admin"
+4 Get the user linked to a policy number -> Can be accessed by users with role "admin"
+
