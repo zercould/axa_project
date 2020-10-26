@@ -27,14 +27,11 @@ npm start
 
 **testing**
 
+*run the following command with the console on*
+
 ```
 npm test
 ```
 
 
-*To test import the file 'axa.postman_collection.json' into postman*
-
-
 ## Raúl Domingo
-
-
